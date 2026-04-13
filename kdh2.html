@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KDH Luxury Travels | Professional Hire Service</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ffcc00; /* Gold/Yellow for branding */
+            --bg-dark: #121212;
+            --card-bg: #1e1e1e;
+            --text-light: #f4f4f4;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); /* Generic Van Image */
+            background-size: cover;
+            background-position: center;
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .services {
+            padding: 50px 20px;
+            max-width: 1200px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            border-bottom: 4px solid transparent;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-bottom: 4px solid var(--primary-color);
+        }
+
+        .service-card i {
+            font-size: 40px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .features {
+            background-color: #1a1a1a;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .cta-section {
+            padding: 60px 20px;
+            text-align: center;
+            background: var(--bg-dark);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: 0.3s;
+        }
+
+        .btn-whatsapp {
+            background-color: #25d366;
+            color: white;
+        }
+
+        .btn-call {
+            background-color: var(--primary-color);
+            color: #000;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #777;
+            border-top: 1px solid #333;
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>KDH High Roof Luxury Hire</h1>
+        <p>Premium Travel Solutions for Every Occasion</p>
+    </header>
+
+    <section class="services">
+        <div class="service-card">
+            <h3>Tourism</h3>
+            <p>Explore Sri Lanka with island-wide tours. Professional and friendly service for foreigners and locals.</p>
+        </div>
+        <div class="service-card">
+            <h3>Staff Service</h3>
+            <p>Reliable monthly or daily transport for office staff and corporate teams. On-time delivery guaranteed.</p>
+        </div>
+        <div class="service-card">
+            <h3>Family Trips</h3>
+            <p>Spacious and comfortable seating for pilgrimages, vacations, and group outings with your loved ones.</p>
+        </div>
+        <div class="service-card">
+            <h3>Weddings</h3>
+            <p>Elegant transport solutions for wedding guests and functions. Clean and well-maintained vehicles.</p>
+        </div>
+    </section>
+
+    <section class="features">
+        <h2>Why Choose Us?</h2>
+        <p>✅ Adjustable & Rotatable Seats | ✅ Dual A/C | ✅ Experienced Drivers | ✅ Clean Interior</p>
+    </section>
+
+    <section class="cta-section">
+        <h2>Book Your Ride Today</h2>
+        <p>Contact us for the best rates and premium service.</p>
+        
+        <a href="tel:+947XXXXXXXX" class="btn btn-call">📞 Call Now</a>
+        <a href="https://wa.me/947XXXXXXXX" class="btn btn-whatsapp">💬 WhatsApp Us</a>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 KDH Luxury Travels. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
