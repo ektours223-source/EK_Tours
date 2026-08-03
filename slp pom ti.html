@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate AI Study Guard - 30% Focus Limit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: radial-gradient(circle at top left, #1e1b4b, #0f172a);
+            --card-bg: rgba(30, 41, 59, 0.65);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --text: #f8fafc;
+            --text-dim: #94a3b8;
+            --danger: #f43f5e;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 460px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 28px;
+            padding: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+            font-weight: 300;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        video, canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .status-focus {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
+        }
+
+        .status-sleep {
+            background: rgba(244, 63, 94, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            animation: pulseWarning 0.8s infinite alternate;
+            box-shadow: 0 0 25px rgba(244, 63, 94, 0.2);
+        }
+
+        @keyframes pulseWarning {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.02); opacity: 0.9; }
+        }
+
+        .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--primary) 0%, #4338ca 100%);
+            color: white;
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.7);
+            background: linear-gradient(135deg, #818cf8 0%, var(--primary-hover) 100%);
+        }
+
+        .action-btn.active-state {
+            background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%);
+            box-shadow: 0 10px 25px -5px rgba(244, 63, 94, 0.5);
+        }
+
+        .logs-wrapper {
+            margin-top: 24px;
+            text-align: left;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 16px;
+        }
+
+        .logs-wrapper h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .log-container {
+            max-height: 90px;
+            overflow-y: auto;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            list-style: none;
+            padding-right: 4px;
+        }
+
+        .log-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        .log-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .log-container li {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Ultimate AI Guard</h1>
+            <p>Focus Time &lt; 30% Looping Alarm</p>
+        </div>
+
+        <div class="video-container">
+            <video id="webcam" autoplay playsinline muted></video>
+            <canvas id="outputCanvas"></canvas>
+        </div>
+
+        <div class="status-badge status-focus" id="statusBox">
+            <span class="dot"></span>
+            <span id="statusText">System Ready - Tap to Start</span>
+        </div>
+
+        <button class="action-btn" id="toggleBtn" onclick="toggleSystem()">Start Session</button>
+
+        <div class="logs-wrapper">
+            <h3>Live Intelligence Feed</h3>
+            <ul class="log-container" id="logList">
+                <li>[System] Ready for study session...</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- MediaPipe Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+
+    <script>
+        const videoElement = document.getElementById('webcam');
+        const canvasElement = document.getElementById('outputCanvas');
+        const canvasCtx = canvasElement.getContext('2d');
+        const statusBox = document.getElementById('statusBox');
+        const statusText = document.getElementById('statusText');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const logList = document.getElementById('logList');
+
+        let isActive = false;
+        let camera = null;
+        let audioCtx = null;
+        let alarmInterval = null;
+        let isAlarmActive = false;
+        
+        let minuteFocusCounter = 0;
+        let totalFramesInMinute = 0;
+        const FRAMES_PER_MINUTE = 1800; // අවශ්‍ය නම් පරීක්ෂා කිරීමට මෙහි අගය අඩු කළ හැක (උදා: 150)
+        const FOCUS_THRESHOLD_PERCENT = 30; // අවධානයෙන් සිටි කාලය 30% ට වඩා අඩු වුවහොත්
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function startLoopingAlarm() {
+            if (isAlarmActive) return;
+            isAlarmActive = true;
+            
+            alarmInterval = setInterval(() => {
+                if (!isAlarmActive) return;
+                try {
+                    initAudio();
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(950, audioCtx.currentTime); 
+                    gain.gain.setValueAtTime(0.35, audioCtx.currentTime);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.35);
+                } catch (e) {
+                    console.error(e);
+                }
+            }, 500); // Looping alarm (සෑම තත්පර 0.5 කට වරක් බීප් ශබ්දය නිකුත් වේ)
+        }
+
+        function stopLoopingAlarm() {
+            if (isAlarmActive) {
+                isAlarmActive = false;
+                clearInterval(alarmInterval);
+            }
+        }
+
+        function addLog(msg) {
+            const timeStr = new Date().toLocaleTimeString();
+            if (logList.children.length === 1 && logList.children[0].textContent.includes("Ready for study")) {
+                logList.innerHTML = '';
+            }
+            const li = document.createElement('li');
+            li.textContent = `[${timeStr}] ${msg}`;
+            logList.prepend(li);
+        }
+
+        function getDistance(p1, p2) {
+            return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+        }
+
+        function calculateEAR(landmarks, eyeIndices) {
+            const p2 = landmarks[eyeIndices[1]]; 
+            const p6 = landmarks[eyeIndices[5]]; 
+            const p3 = landmarks[eyeIndices[2]]; 
+            const p5 = landmarks[eyeIndices[4]]; 
+            const p1 = landmarks[eyeIndices[0]]; 
+            const p4 = landmarks[eyeIndices[3]]; 
+
+            const verticalDist1 = getDistance(p2, p6);
+            const verticalDist2 = getDistance(p3, p5);
+            const horizontalDist = getDistance(p1, p4);
+            
+            return (verticalDist1 + verticalDist2) / (2 * horizontalDist);
+        }
+
+        function onResults(results) {
+            if (!isActive) return;
+
+            canvasElement.width = videoElement.videoWidth || 640;
+            canvasElement.height = videoElement.videoHeight || 480;
+            canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+            
+            totalFramesInMinute++;
+            const SLEEP_THRESHOLD_EAR = 0.17; 
+
+            if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+                const landmarks = results.multiFaceLandmarks[0];
+                
+                let minX = 1, minY = 1, maxX = 0, maxY = 0;
+                for (let pt of landmarks) {
+                    if (pt.x < minX) minX = pt.x;
+                    if (pt.y < minY) minY = pt.y;
+                    if (pt.x > maxX) maxX = pt.x;
+                    if (pt.y > maxY) maxY = pt.y;
+                }
+
+                const boxX = minX * canvasElement.width;
+                const boxY = minY * canvasElement.height;
+                const boxWidth = (maxX - minX) * canvasElement.width;
+                const boxHeight = (maxY - minY) * canvasElement.height;
+
+                canvasCtx.strokeStyle = isAlarmActive ? '#f43f5e' : '#10b981';
+                canvasCtx.lineWidth = 3;
+                canvasCtx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+
+                const upperLip = landmarks[13];
+                const lowerLip = landmarks[14];
+                canvasCtx.fillStyle = '#6366f1';
+                canvasCtx.beginPath();
+                canvasCtx.arc(upperLip.x * canvasElement.width, upperLip.y * canvasElement.height, 4, 0, 2 * Math.PI);
+                canvasCtx.arc(lowerLip.x * canvasElement.width, lowerLip.y * canvasElement.height, 4, 0, 2 * Math.PI);
+                canvasCtx.fill();
+
+                const leftEyeIndices = [33, 160, 158, 133, 153, 144];
+                const rightEyeIndices = [362, 385, 387, 263, 373, 380];
+                const leftEAR = calculateEAR(landmarks, leftEyeIndices);
+                const rightEAR = calculateEAR(landmarks, rightEyeIndices);
+                const avgEAR = (leftEAR + rightEAR) / 2;
+
+                const noseTip = landmarks[1];
+                const chin = landmarks[152];
+                const forehead = landmarks[10];
+                const headVerticalSpan = Math.abs(chin.y - forehead.y);
+                const noseToChin = Math.abs(chin.y - noseTip.y);
+                const headRatio = noseToChin / headVerticalSpan;
+
+                const mouthOpenDist = getDistance(upperLip, lowerLip);
+
+                const isEyesOpen = avgEAR > SLEEP_THRESHOLD_EAR;
+                const isHeadProper = headRatio > 0.22; 
+                const isNotYawning = mouthOpenDist < 0.08; 
+
+                if (isEyesOpen && isHeadProper && isNotYawning) {
+                    minuteFocusCounter++;
+
+                    // ඔබ නැවත නිසි පරිදි පාඩම් කරන විට (Focus ලැබුණු විට) Alarm එක නතර වේ
+                    if (isAlarmActive) {
+                        stopLoopingAlarm();
+                        statusBox.className = "status-badge status-focus";
+                        statusText.textContent = "Focus Restored - Guard Active";
+                        addLog("Focus restored: Alarm stopped.");
+                    }
+                }
+            }
+
+            // විනාඩියක චක්‍රය අවසානයේ අවධානය ගණනය කිරීම
+            if (totalFramesInMinute >= FRAMES_PER_MINUTE) {
+                const focusPercent = (minuteFocusCounter / totalFramesInMinute) * 100;
+                
+                // අවධානයෙන් සිටි කාලය 30% ට වඩා අඩු නම් (Focus time < 30%)
+                if (focusPercent < FOCUS_THRESHOLD_PERCENT) {
+                    if (!isAlarmActive) {
+                        startLoopingAlarm();
+                        statusBox.className = "status-badge status-sleep";
+                        statusText.textContent = "Wake Up! Focus Time < 30%!";
+                        addLog(`Minute Review: Focus time at ${focusPercent.toFixed(1)}%, looping alarm triggered.`);
+                    }
+                }
+
+                minuteFocusCounter = 0;
+                totalFramesInMinute = 0;
+            }
+        }
+
+        const faceMesh = new FaceMesh({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
+        });
+
+        faceMesh.setOptions({
+            maxNumFaces: 1,
+            refineLandmarks: true,
+            minDetectionConfidence: 0.75,
+            minTrackingConfidence: 0.75
+        });
+
+        faceMesh.onResults(onResults);
+
+        function toggleSystem() {
+            initAudio();
+            if (!isActive) {
+                navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, facingMode: "user" } })
+                    .then((stream) => {
+                        videoElement.srcObject = stream;
+                        videoElement.play().catch(e => console.log(e));
+                        
+                        isActive = true;
+                        stopLoopingAlarm();
+                        minuteFocusCounter = 0;
+                        totalFramesInMinute = 0;
+                        toggleBtn.textContent = "Stop Session";
+                        toggleBtn.classList.add("active-state");
+                        statusBox.className = "status-badge status-focus";
+                        statusText.textContent = "Smart Guard Active (<30% Limit)...";
+                        addLog("Study session started.");
+
+                        camera = new Camera(videoElement, {
+                            onFrame: async () => {
+                                if (isActive && videoElement.readyState === videoElement.HAVE_ENOUGH_DATA) {
+                                    await faceMesh.send({ image: videoElement });
+                                }
+                            },
+                            width: 640,
+                            height: 480
+                        });
+                        camera.start();
+                    })
+                    .catch((err) => {
+                        alert("Camera access is required!");
+                        console.error(err);
+                    });
+            } else {
+                isActive = false;
+                stopLoopingAlarm();
+                if (camera) camera.stop();
+                if (videoElement.srcObject) {
+                    videoElement.srcObject.getTracks().forEach(track => track.stop());
+                }
+                toggleBtn.textContent = "Start Session";
+                toggleBtn.classList.remove("active-state");
+                statusBox.className = "status-badge status-focus";
+                statusText.textContent = "System Ready - Tap to Start";
+                addLog("Session ended.");
+            }
+        }
+    </script>
+</body>
+</html>
